@@ -12,9 +12,10 @@ namespace Server
     {
         static void Main(string[] args)
         {
+            // CHANGE THIS
             int PORT = 1234;
             int BUFFER_SIZE = 2 * 1024;
-            // CHANGE THIS
+            
             IPEndPoint ipe = new IPEndPoint(IPAddress.Any, PORT);
 
             Socket serverSocket = new Socket(IPAddress.Any.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
