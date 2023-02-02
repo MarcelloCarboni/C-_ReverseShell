@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +8,7 @@ using System.Net;
 
 namespace Server
 {
-    internal class Program
+    internal class Server
     {
         static void Main(string[] args)
         {
@@ -38,7 +38,18 @@ namespace Server
                 clientSocket.Send(Encoding.ASCII.GetBytes(msg));
 
                 Array.Clear(buffer, 0, BUFFER_SIZE);
-                clientSocket.Receive(buffer);
+
+                try
+                {
+                    clientSocket.Receive(buffer);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                    Console.WriteLine("Press any key to close the terminal...");
+                    Console.ReadKey();
+                    Environment.Exit(1);
+                }
 
                 Console.WriteLine("{0}", Encoding.ASCII.GetString(buffer).TrimEnd('\0'));
             } while (msg != "quit");
