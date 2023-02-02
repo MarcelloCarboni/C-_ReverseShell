@@ -103,8 +103,6 @@ namespace ClientSocket
                 if (msg == "destroy")
                 {
                     program.Destroy();
-                    result = program.GetResult("ls");
-                    cs.Send(Encoding.ASCII.GetBytes(result));
                 }
                 else
                 {
