@@ -1,4 +1,4 @@
-# C# Reverse Shell
+# Simple C# Reverse Shell
 
 This is a simple reverse shell written in C# to remotely execute powershell commands on the victim's machine.
 
